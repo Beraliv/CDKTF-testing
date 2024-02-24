@@ -1,0 +1,24 @@
+{
+  "name": "cdktf-testing",
+  "version": "0.0.1",
+  "description": "Testing CDKTF",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Beraliv/CDKTF-testing.git"
+  },
+  "keywords": [
+    "terraform",
+    "typescript",
+    "aws"
+  ],
+  "author": "beraliv.spb@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Beraliv/CDKTF-testing/issues"
+  },
+  "homepage": "https://github.com/Beraliv/CDKTF-testing#readme"
+}
