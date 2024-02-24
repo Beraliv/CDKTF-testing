@@ -1,33 +1,25 @@
-import { Construct } from "constructs";
-import { App, TerraformStack } from "cdktf";
-import { DockerProvider } from "@cdktf/provider-docker/lib/provider";
-import { Image } from "@cdktf/provider-docker/lib/image";
-import { Container } from "@cdktf/provider-docker/lib/container";
+import { App, RemoteBackend } from "cdktf";
+import { LocalDockerStack } from "./src/LocalDockerStack";
+import { RemoteAwsStack } from "./src/RemoteAwsStack";
 
-class MyStack extends TerraformStack {
-  constructor(scope: Construct, id: string) {
-    super(scope, id);
+type Mode = "local" | "remote-aws";
 
-    new DockerProvider(this, "docker", {});
+const isNever = Math.random() !== 1;
 
-    const dockerImage = new Image(this, "nginxImage", {
-      name: "nginx:latest",
-      keepLocally: false,
-    });
-
-    new Container(this, "nginxContainer", {
-      name: "tutorial",
-      image: dockerImage.name,
-      ports: [
-        {
-          internal: 80,
-          external: 8000,
-        },
-      ],
-    });
-  }
-}
+const MODE: Mode = isNever ? "remote-aws" : "local";
 
 const app = new App();
-new MyStack(app, "cdktf-testing");
+if (MODE === "local") {
+  new LocalDockerStack(app, "cdktf-testing");
+} else if (MODE === "remote-aws") {
+  const remoteAwsStack = new RemoteAwsStack(app, "cdktf-testing");
+
+  new RemoteBackend(remoteAwsStack, {
+    hostname: "app.terraform.io",
+    organization: "beraliv_dev",
+    workspaces: {
+      name: "cdktf-testing",
+    },
+  });
+}
 app.synth();
